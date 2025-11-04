@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: Rewards API
+  version: 1.0.0
+  description: API for retrieving customer rewards summary based on their transactions.
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /api/rewards/{customerId}:
+    get:
+      summary: Get rewards summary for a customer
+      operationId: getRewardsByCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved the reward summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RewardSummary"
+        "204":
+          description: Customer exists but has no transactions
+        "404":
+          description: Customer not found or invalid ID
+        "500":
+          description: Unexpected server error
+
+components:
+  schemas:
+    RewardSummary:
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: "customerId"
+        customerName:
+          type: string
+          example: "John Smith"
+        monthlyPoints:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Points earned per month (key = month number)
+          example:
+            8: 120
+            9: 300
+            10: 150
+        totalPoints:
+          type: integer
+          example: 570
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "customerId"
+        name:
+          type: string
+          example: "John Smith"
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "transactionId"
+        customerId:
+          type: string
+          example: "customerId"
+        date:
+          type: string
+          format: date
+          example: "2025-10-01"
+        amount:
+          type: number
+          format: double
+          example: 120.50

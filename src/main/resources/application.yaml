@@ -19,3 +19,7 @@ server:
   error:
     whitelabel:
       enabled: false
+
+springdoc:
+  swagger-ui:
+    url: /openapi.yaml
